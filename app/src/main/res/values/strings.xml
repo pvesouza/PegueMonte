@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PegueMonte</string>
+    <string name="background_image">background image</string>
 </resources>
