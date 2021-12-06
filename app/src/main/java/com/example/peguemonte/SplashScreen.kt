@@ -8,7 +8,9 @@ import android.os.Handler
 
 class SplashScreen : AppCompatActivity(){
 
-    private val SPLASH_TIME:Long = 2000
+    companion object{
+        private val SPLASH_TIME:Long = 2000
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
