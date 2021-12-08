@@ -7,7 +7,7 @@ import com.example.peguemonte.R
 import com.example.peguemonte.entity.Client
 
 class MyAdapter(
-    val list:List<Client>): RecyclerView.Adapter<MyViewHolder>() {
+    private var list:List<Client>): RecyclerView.Adapter<MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         // Create a new view, which defines the UI of the list item
@@ -26,6 +26,10 @@ class MyAdapter(
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    fun setList(list:List<Client>){
+        this.list = list
     }
 
 }

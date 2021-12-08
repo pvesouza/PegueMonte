@@ -1,10 +1,12 @@
 package com.example.peguemonte
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.peguemonte.application.PegueMonteApplication
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var nameSearch:EditText
     lateinit var clientList:List<Client>
     lateinit var recyclerView:RecyclerView
+    var helperDB: HelperDB? = null
+    var myAdapter: MyAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +32,15 @@ class MainActivity : AppCompatActivity() {
         val buttonSearch:ImageButton = findViewById(R.id.imageButton_search)
         recyclerView = findViewById(R.id.clientlist_recyclerview)
         val addButton:FloatingActionButton = findViewById(R.id.floatingActionButton_add)
-        val helperDB: HelperDB? = PegueMonteApplication.instance.helperDB
+        helperDB = PegueMonteApplication.instance.helperDB
         val recyclerLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = recyclerLayoutManager
 
         //Fill the recycler view
         try {
-            clientList = helperDB?.getClientList() ?: mutableListOf()
-            val adapter = MyAdapter(clientList)
-            recyclerView.adapter = adapter
+            clientList = helperDB?.getClientList()!!
+            myAdapter = MyAdapter(clientList)
+            recyclerView.adapter = myAdapter
         }catch (ex:Exception){
             ex.printStackTrace()
         }
@@ -57,35 +61,53 @@ class MainActivity : AppCompatActivity() {
     //Button Listener
     private fun onClickSearch() {
         var str = nameSearch.text.toString()
+        val list:List<Client> = mutableListOf()
+        myAdapter?.setList(list)
+
         if (str.length == 0){
             str = "Fill search correctly"
             Toast.makeText(applicationContext, str, Toast.LENGTH_LONG).show()
-            return
-        }
-        str = "Searching for $str"
-        var list:List<Client> = mutableListOf()
-        Toast.makeText(applicationContext, str, Toast.LENGTH_LONG).show()
-        str = nameSearch.text.toString()
-        val helperDB: HelperDB? = PegueMonteApplication.instance.helperDB
-        try{
-            if (helperDB != null) {
-                list = helperDB.searchClientByName(str)
+            try {
+                if (helperDB != null) {
+                    val list = helperDB!!.getClientList()
+                    myAdapter?.setList(list)
+                    recyclerView.adapter = myAdapter
+                }
+            }catch (ex: Exception){
+                ex.printStackTrace()
             }
-            val adapter = MyAdapter(list)
-            recyclerView.adapter = adapter
-        }catch (ex: Exception){
+        }else{
+
+            str = "Searching for $str"
+            Toast.makeText(applicationContext, str, Toast.LENGTH_LONG).show()
+            str = nameSearch.text.toString()
+            try{
+                if (helperDB != null) {
+                    val list = helperDB!!.searchClientByName(str)
+                    myAdapter?.setList(list)
+                    recyclerView.adapter = myAdapter
+                }
+            }catch (ex: Exception){
+                ex.printStackTrace()
+            }
+        }
+    }
+
+    override fun onResume(){
+        super.onResume()
+        try {
+            clientList = helperDB?.getClientList() ?: mutableListOf()
+            myAdapter?.setList(clientList)
+            recyclerView.adapter = myAdapter
+        }catch (ex:Exception){
             ex.printStackTrace()
         }
     }
 
     // Add Button
     private fun onClickAdd(){
-        val helperDB = PegueMonteApplication.instance.helperDB
-        val client = Client("Pedro")
-        client.setCpf("01395783403")
-        if (helperDB != null) {
-            helperDB.saveClient(client)
-        }
+        val intent = Intent(this, Register::class.java)
+        startActivity(intent)
     }
 
 }

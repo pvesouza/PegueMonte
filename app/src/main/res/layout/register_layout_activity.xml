@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView_name_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/textview_name_client_str"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:hint="@string/hint_name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_name_client"
+        app:layout_constraintStart_toEndOf="@+id/textView_name_client"
+        app:layout_constraintTop_toTopOf="@+id/textView_name_client"
+        android:autofillHints="" />
+
+    <TextView
+        android:id="@+id/textView_cpf_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/textview_cpf_client_str"
+        app:layout_constraintEnd_toEndOf="@+id/textView_name_client"
+        app:layout_constraintStart_toStartOf="@+id/textView_name_client"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <EditText
+        android:id="@+id/editTextCPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/cpf_hint"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_cpf_client"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toTopOf="@+id/textView_cpf_client"
+        android:autofillHints="" />
+
+    <TextView
+        android:id="@+id/textView_phone_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/textview_phone_str"
+        app:layout_constraintEnd_toEndOf="@+id/textView_cpf_client"
+        app:layout_constraintStart_toStartOf="@+id/textView_cpf_client"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCPF" />
+
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/phone_hint"
+        android:inputType="phone"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_phone_client"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCPF"
+        app:layout_constraintStart_toStartOf="@+id/editTextCPF"
+        app:layout_constraintTop_toTopOf="@+id/textView_phone_client"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/save_btn_str"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/cancel_btn_str"
+        app:layout_constraintEnd_toEndOf="@+id/button_save"
+        app:layout_constraintStart_toStartOf="@+id/button_save"
+        app:layout_constraintTop_toBottomOf="@+id/button_save" />
+</androidx.constraintlayout.widget.ConstraintLayout>

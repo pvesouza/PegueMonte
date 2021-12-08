@@ -7,6 +7,11 @@ class Client(val name:String) {
     private var address:Address? = null
     private var cpf:String = ""
 
+    constructor(name:String, cpf: String, phone: Phone) : this(name) {
+        this.setCpf(cpf)
+        this.setPhone(phone)
+    }
+
     fun setId(id:Int){
         this.id = id
     }

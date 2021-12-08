@@ -6,6 +6,7 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.peguemonte.entity.Client
+import com.example.peguemonte.entity.Phone
 import java.lang.Exception
 
 class HelperDB(
@@ -14,7 +15,7 @@ class HelperDB(
 
     companion object{
         val NAME:String = "peguemonte.db"
-        val CURRENT_VERSION = 1
+        val CURRENT_VERSION = 2
     }
 
     // Create Table client
@@ -22,12 +23,14 @@ class HelperDB(
     private val COLUMN_ID = "id"
     private val COLUMN_NAME = "name"
     private val COLUMN_CPF = "cpf"
+    private val COLUMN_PHONE = "phone"
 
     private val CREATE_TABLE = "CREATE TABLE $TABLE_NAME_CLIENTS (" +
             "$COLUMN_ID INTEGER NOT NULL," +
             "$COLUMN_NAME TEXT NOT NULL," +
             "$COLUMN_CPF TEXT NOT NULL," +
-            "" +
+            "$COLUMN_PHONE TEXT NOT NULL," +
+            ""+
             "PRIMARY KEY ($COLUMN_ID AUTOINCREMENT))"
 
     // Create Table Phones
@@ -36,8 +39,8 @@ class HelperDB(
     private val COLUMN_ID_CLIENT = "id_client"
 
     private val CREATE_PHONE_TABLE = "CREATE TABLE $TABLE_NAME_PHONE (" +
-            "$COLUMN_ID INTEGER NOT NULL" +
-            "$COLUMN_ID_CLIENT INTEGER NOT NULL" +
+            "$COLUMN_ID INTEGER NOT NULL," +
+            "$COLUMN_ID_CLIENT INTEGER NOT NULL," +
             "$COLUMN_PHONE_NUMBER TEXT NOT NULL," +
             "" +
             "PRIMARY KEY ($COLUMN_ID AUTOINCREMENT))"
@@ -51,10 +54,10 @@ class HelperDB(
 
     private val CREATE_TABLE_ADDRESS = "CREATE TABLE $TABLE_NAME_ADDRESS (" +
             "$COLUMN_ID INTEGER NOT NULL," +
-            "$COLUMN_ID_CLIENT INTEGER NOT NULL" +
+            "$COLUMN_ID_CLIENT INTEGER NOT NULL," +
             "$COLUMN_STREET TEXT NOT NULL," +
-            "$COLUMN_NEIGHBORHOOD TEXT NOT NULL" +
-            "$COLUMN_COMPLEMENT TEXT NULL" +
+            "$COLUMN_NEIGHBORHOOD TEXT NOT NULL," +
+            "$COLUMN_COMPLEMENT TEXT NULL," +
             "$COLUMN_ADDRESS_NUMBER INTEGER NULL," +
             "" +
             "PRIMARY KEY ($COLUMN_ID AUTOINCREMENT))"
@@ -89,7 +92,7 @@ class HelperDB(
     fun getClientList():List<Client>{
         val clientList:MutableList<Client> = mutableListOf()
         val db:SQLiteDatabase = readableDatabase
-        val query = "SELECT *FROM $TABLE_NAME_CLIENTS"
+        val query = "SELECT *FROM $TABLE_NAME_CLIENTS ORDER BY $COLUMN_NAME"
         val cursor:Cursor = db.rawQuery(query, null)
 
         if (fillClientList(cursor, clientList)){
@@ -119,7 +122,7 @@ class HelperDB(
     fun searchClientByName(name:String):List<Client>{
         val db:SQLiteDatabase = readableDatabase
         val clientList:MutableList<Client> = mutableListOf()
-        val query = "SELECT *FROM $TABLE_NAME_CLIENTS WHERE $COLUMN_NAME = '$name'"
+        val query = "SELECT *FROM $TABLE_NAME_CLIENTS WHERE $COLUMN_NAME LIKE '%$name%'"
         val cursor:Cursor = db.rawQuery(query, arrayOf())
 
         if (fillClientList(cursor, clientList)) {
@@ -136,12 +139,13 @@ class HelperDB(
     // Saves a Client inside db
     fun saveClient(client:Client){
         val db:SQLiteDatabase = writableDatabase
-        val sql = "INSERT INTO $TABLE_NAME_CLIENTS ($COLUMN_NAME,$COLUMN_CPF) VALUES('${client.name}','${client.getCpf()}')"
+        val sql = "INSERT INTO $TABLE_NAME_CLIENTS ($COLUMN_NAME,$COLUMN_CPF,$COLUMN_PHONE) VALUES(?,?,?)"
+        val arrayArgs = arrayOf(client.name, client.getCpf(), client.getPhone()?.number)
         try {
-            db.execSQL(sql)
+            db.execSQL(sql, arrayArgs)
             db.close()
         }catch (ex: Exception){
-            ex.printStackTrace()
+            throw ex
         }
     }
 
@@ -157,11 +161,13 @@ class HelperDB(
 
             //Gets a client from SQLite database
             val columnIndexName = cursor.getColumnIndex(COLUMN_NAME)
-            val columnIndexCpf = cursor.getColumnIndex(COLUMN_NAME)
-            val columnIndexId = cursor.getColumnIndex(COLUMN_NAME)
+            val columnIndexCpf = cursor.getColumnIndex(COLUMN_CPF)
+            val columnIndexPhone = cursor.getColumnIndex(COLUMN_PHONE)
+            val columnIndexId = cursor.getColumnIndex(COLUMN_ID)
             val client = Client(cursor.getString(columnIndexName))
             client.setId(cursor.getInt(columnIndexId))
             client.setCpf(cursor.getString(columnIndexCpf))
+            client.setPhone(Phone(cursor.getString(columnIndexPhone)))
 
             clientList.add(client)
         }

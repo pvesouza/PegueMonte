@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">PegueMonte</string>
     <string name="background_image">background image</string>
+    <string name="hint_name">Name</string>
+    <string name="textview_name_client_str">Name</string>
+    <string name="textview_cpf_client_str">CPF</string>
+    <string name="cpf_hint">cpf</string>
+    <string name="textview_phone_str">Phone</string>
+    <string name="phone_hint">phone</string>
+    <string name="save_btn_str">Save</string>
+    <string name="cancel_btn_str">Cancel</string>
 </resources>
