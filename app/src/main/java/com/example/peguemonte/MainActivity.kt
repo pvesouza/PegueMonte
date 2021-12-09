@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.peguemonte.application.PegueMonteApplication
@@ -24,6 +23,10 @@ class MainActivity : AppCompatActivity() {
     var helperDB: HelperDB? = null
     var myAdapter: MyAdapter? = null
 
+    companion object{
+        val ID = "ID"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +39,14 @@ class MainActivity : AppCompatActivity() {
         val recyclerLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = recyclerLayoutManager
 
+
         //Fill the recycler view
         try {
             clientList = helperDB?.getClientList()!!
-            myAdapter = MyAdapter(clientList)
+            myAdapter = MyAdapter(clientList, this)
+            myAdapter!!.setOnItemClickListener{
+                item -> startActivity(item.getId())
+            }
             recyclerView.adapter = myAdapter
         }catch (ex:Exception){
             ex.printStackTrace()
@@ -104,10 +111,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Starts a new activity
+    private fun startActivity(id:Int){
+        val intent = Intent(this, Register::class.java)
+        val bundle = Bundle()
+        bundle.putInt(ID, id)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
     // Add Button
     private fun onClickAdd(){
         val intent = Intent(this, Register::class.java)
         startActivity(intent)
     }
-
 }
