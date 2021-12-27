@@ -15,6 +15,6 @@ class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(client:Client, context: Context){
         this.textViewClientPhone.text = client.getPhone()?.number ?: context.getString(R.string.no_phone)
-        this.textViewClientName.text = client.name
+        this.textViewClientName.text = "${client.name}"
     }
 }

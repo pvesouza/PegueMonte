@@ -2,7 +2,6 @@ package com.example.peguemonte.helpers
 
 import android.content.Context
 import android.database.Cursor
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.peguemonte.entity.Client
@@ -119,10 +118,15 @@ class HelperDB(
     }
 
     //Search client by name
-    fun searchClientByName(name:String):List<Client>{
+    fun searchClientByName(name:String, isSearchById: Boolean = false, id: Int = 0):List<Client>{
         val db:SQLiteDatabase = readableDatabase
         val clientList:MutableList<Client> = mutableListOf()
-        val query = "SELECT *FROM $TABLE_NAME_CLIENTS WHERE $COLUMN_NAME LIKE '%$name%'"
+        var query = "SELECT *FROM $TABLE_NAME_CLIENTS WHERE $COLUMN_NAME LIKE '%$name%'"
+
+        if (isSearchById){
+            query = "SELECT *FROM $TABLE_NAME_CLIENTS WHERE ${COLUMN_ID} = $id"
+        }
+
         val cursor:Cursor = db.rawQuery(query, arrayOf())
 
         if (fillClientList(cursor, clientList)) {
@@ -146,6 +150,34 @@ class HelperDB(
             db.close()
         }catch (ex: Exception){
             throw ex
+        }
+    }
+
+    fun updateClient(id:Int, client:Client){
+        val db = writableDatabase
+        val sql = "UPDATE ${TABLE_NAME_CLIENTS}\n" +
+                "SET ${COLUMN_NAME} = '${client.name}',\n" +
+                "${COLUMN_CPF} = '${client.getCpf()}',\n" +
+                "${COLUMN_PHONE} = '${client.getPhone()?.number}'\n" +
+                "WHERE ${COLUMN_ID} = ${id};"
+
+        try {
+            db.execSQL(sql)
+            db.close()
+        }catch (ex:Exception){
+            throw Exception("Impossible to Update Client")
+        }
+    }
+
+    //Delete a client by id
+    fun deleteClient(id:Int){
+        val db = writableDatabase ?: return
+        val sql = "DELETE FROM $TABLE_NAME_CLIENTS WHERE $COLUMN_ID = $id"
+        try {
+            db.execSQL(sql)
+            db.close()
+        }catch (ex:Exception){
+            throw Exception("Error Deleting Client")
         }
     }
 
@@ -173,5 +205,6 @@ class HelperDB(
         }
         return true
     }
+
 
 }

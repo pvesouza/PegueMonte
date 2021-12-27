@@ -25,7 +25,7 @@ class MyAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
-        val client:Client = this.list.get(position)
+        val client:Client = this.list[position]
         holder.bind(client, this.context)
         //Binds the click listener
         holder.itemView.setOnClickListener{this.onItemClickListener(client) }

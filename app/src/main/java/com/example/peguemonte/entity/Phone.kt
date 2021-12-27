@@ -21,4 +21,8 @@ class Phone (val number:String){
         return this.idClient
     }
 
+    override fun toString(): String {
+        return number
+    }
+
 }
