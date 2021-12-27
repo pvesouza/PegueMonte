@@ -158,7 +158,8 @@ class HelperDB(
         val sql = "UPDATE ${TABLE_NAME_CLIENTS}\n" +
                 "SET ${COLUMN_NAME} = '${client.name}',\n" +
                 "${COLUMN_CPF} = '${client.getCpf()}',\n" +
-                "${COLUMN_PHONE} = '${client.getPhone()?.number}'\n" +
+                "${COLUMN_PHONE} = '${client.getPhone()?.number}',\n" +
+                "${COLUMN_ID} = ${id}\n" +
                 "WHERE ${COLUMN_ID} = ${id};"
 
         try {
